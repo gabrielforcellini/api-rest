@@ -4,7 +4,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 
-//forma de ler o JSON
+//way to read json
 //middleware
 app.use(
     express.urlencoded({ extended: true })
@@ -12,17 +12,17 @@ app.use(
 
 app.use(express.json());
 
-//rotas api
+//api routes
 const userRoutes = require("./routes/userRoutes");
 const funkoRoutes = require("./routes/funkoRoutes");
 
-//rotas para cadastro de usuarios
+//user api routes
 app.use("/user", userRoutes);
 
-//rotas para cadastro de funkos
+//funkos api routes
 app.use("/funko", funkoRoutes);
 
-//rota inicial
+//initial route
 app.get("/", (req, res) => {
     res.json({ message: "API criada para projeto final em react - Arthur Elias, Gabriel Forcellini e Matheus Schmidt" })
 })
