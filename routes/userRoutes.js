@@ -100,7 +100,7 @@ router.patch("/:id", async (req, res) => {
             return;
         };
 
-        res.status(200).json({ objUser });
+        res.status(200).json({ user: objUser });
     } catch (error) {
         res.status(500).json({ error: error });
     };
@@ -125,3 +125,5 @@ router.delete("/:id", async(req, res) => {
         res.status(500).json({ error: error });
     };
 });
+
+module.exports = router;

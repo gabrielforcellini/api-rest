@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const User = require("../models/Funko");
+const Funko = require("../models/Funko");
 
 //create
 
@@ -9,3 +9,5 @@ const User = require("../models/Funko");
 //update
 
 //delete
+
+module.exports = router;
