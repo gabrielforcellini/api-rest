@@ -4,28 +4,32 @@ const User = require("../models/User");
 
 //create
 router.post("/", async (req, res) => {
-    const { name, lastname, email, user, password } = req.body;
+    const { name, 
+            lastname, 
+            email, 
+            user, 
+            password } = req.body;
 
     if(!name){
         res.status(422).json({ error: "Name Required!"});
         return;
-    }
+    };
     if(!lastname){
         res.status(422).json({ error: "Lastname Required!"});
         return;
-    }
+    };
     if(!email){
         res.status(422).json({ error: "Email Required!"});
         return;    
-    }
+    };
     if(!user){
         res.status(422).json({ error: "User Required!"});
         return;    
-    }
+    };
     if(!password){
         res.status(422).json({ error: "Password Required!"});
         return;    
-    }
+    };
 
     const objUser = {
         name,
@@ -67,7 +71,7 @@ router.get("/:id", async (req, res) => {
         if(!user){
             res.status(422).json({ message: "User Not Found!"});
             return;
-        }
+        };
 
         res.status(200).json({ user });
     } catch (error) {
@@ -81,7 +85,11 @@ router.get("/:id", async (req, res) => {
 router.patch("/:id", async (req, res) => {
     const id = req.params.id;
 
-    const { name, lastname, email, user, password } = req.body;
+    const { name, 
+            lastname, 
+            email, 
+            user, 
+            password } = req.body;
 
     const objUser = {
         name, 
@@ -117,6 +125,7 @@ router.delete("/:id", async(req, res) => {
         return;
     };
 
+    res.status(200).json({ message: "User deleted!"});
     try {
         await User.deleteOne({ _id: id });
 

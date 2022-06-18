@@ -31,5 +31,6 @@ mongoose
     )
     .then(() => {
         app.listen(3000);
+        console.log("Conectado ao mongoDB")
     })
     .catch((e) => console.log(e));
