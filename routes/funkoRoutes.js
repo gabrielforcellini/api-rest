@@ -26,7 +26,7 @@ router.post("/", async (req, res) => {
             res.status(422).json({ error: "ImageUrl Required!"});
             return;
         };
-        if(!sale){
+        if(sale === null){
             res.status(422).json({ error: "Sale Required!"});
             return;
         };

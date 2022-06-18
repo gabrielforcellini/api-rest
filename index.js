@@ -14,8 +14,13 @@ app.use(express.json());
 
 //rotas api
 const userRoutes = require("./routes/userRoutes");
+const funkoRoutes = require("./routes/funkoRoutes");
 
+//rotas para cadastro de usuarios
 app.use("/user", userRoutes);
+
+//rotas para cadastro de funkos
+app.use("/funko", funkoRoutes);
 
 //rota inicial
 app.get("/", (req, res) => {
