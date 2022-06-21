@@ -4,48 +4,43 @@ const Funko = require("../models/Funko");
 
 //create
 router.post("/", async (req, res) => {
-    const {title,
+    const { title,
         description,
         price,
         imageUrl,
-        sale} = req.body;
+        sale } = req.body;
 
-        if(!title){
-            res.status(422).json({ error: "Title Required!"});
-            return;
-        };
-        if(!description){
-            res.status(422).json({ error: "Description Required!"});
-            return;
-        };
-        if(!price){
-            res.status(422).json({ error: "Price Required!"});
-            return;
-        };
-        if(!imageUrl){
-            res.status(422).json({ error: "ImageUrl Required!"});
-            return;
-        };
-        if(sale === null){
-            res.status(422).json({ error: "Sale Required!"});
-            return;
-        };
+    if (!title) {
+        return res.status(422).json({ error: "Title Required!" });
+    };
+    if (!description) {
+        return res.status(422).json({ error: "Description Required!" });
+    };
+    if (!price) {
+        return res.status(422).json({ error: "Price Required!" });
+    };
+    if (!imageUrl) {
+        return res.status(422).json({ error: "ImageUrl Required!" });
+    };
+    if (sale === null) {
+        return res.status(422).json({ error: "Sale Required!" });
+    };
 
-        const funko = {
-            title,
-            description,
-            price,
-            imageUrl,
-            sale,
-        };
+    const funko = {
+        title,
+        description,
+        price,
+        imageUrl,
+        sale,
+    };
 
-        try {
-            await Funko.create(funko);
+    try {
+        await Funko.create(funko);
 
-            res.status(201).json({ message: "Registered Funko!"});
-        } catch (error) {
-            res.status(500).json({ error: error });
-        };
+        res.status(201).json({ message: "Registered Funko!" });
+    } catch (error) {
+        res.status(500).json({ error: error });
+    };
 });
 
 //read
@@ -66,11 +61,10 @@ router.get("/:id", async (req, res) => {
     const id = req.params.id;
 
     try {
-        const funko = await Funko.findOne({ _id: id});
+        const funko = await Funko.findOne({ _id: id });
 
-        if(!funko){
-            res.status(422).json({ message: "Funko not Found!"});
-            return;
+        if (!funko) {
+            return res.status(422).json({ message: "Funko not Found!" });
         };
 
         res.status(200).json({ funko });
@@ -105,9 +99,8 @@ router.patch("/:id", async (req, res) => {
         const updateFunko = await Funko.updateOne({ _id: id }, funko);
 
         //matchedCount returns 1 if changes were made
-        if(updateFunko.matchedCount === 0){
-            res.status(422).json({ message: "Funko not Found!"});
-            return;
+        if (updateFunko.matchedCount === 0) {
+            return res.status(422).json({ message: "Funko not Found!" });
         };
 
         res.status(200).json({ funko });
@@ -123,12 +116,11 @@ router.delete("/:id", async (req, res) => {
 
     const funko = await Funko.findOne({ _id: id });
 
-    if(!funko){
-        res.status(422).json({ message: "Funko not Found!"});
-        return;
+    if (!funko) {
+        return res.status(422).json({ message: "Funko not Found!" });
     };
 
-    res.status(200).json({ message: "Funko deleted!"});
+    res.status(200).json({ message: "Funko deleted!" });
     try {
         await Funko.deleteOne({ _id: id });
     } catch (error) {

@@ -1,8 +1,8 @@
 // config inicial
 require("dotenv").config();
 const express = require("express");
-const app = express();
 const mongoose = require("mongoose");
+const app = express();
 
 //way to read json
 //middleware
@@ -36,6 +36,6 @@ mongoose
     )
     .then(() => {
         app.listen(3000);
-        console.log("Conectado ao mongoDB")
+        console.log("Conectado ao mongoDB");
     })
     .catch((e) => console.log(e));
