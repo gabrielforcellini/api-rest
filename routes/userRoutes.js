@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
 
+const SECRET = process.env.SECRET;
+
 const checkToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(" ")[1];
@@ -13,9 +15,8 @@ const checkToken = (req, res, next) => {
     };
 
     try {
-        const secret = process.env.SECRET;
 
-        jwt.verify(token, secret);
+        jwt.verify(token, SECRET);
 
         next();
     } catch (error) {
@@ -76,9 +77,9 @@ router.post("/register", async (req, res) => {
 });
 
 //login
-router.post("/login", checkToken, async (req, res) => {
+router.post("/login", async (req, res) => {
     const { email,
-        password } = req.body;
+            password } = req.body;
 
     if (!email) {
         return res.status(422).json({ error: "Email Required!" });
@@ -102,9 +103,7 @@ router.post("/login", checkToken, async (req, res) => {
     };
 
     try {
-        const secret = process.env.SECRET;
-
-        const token = jwt.sign({ id: user._id, secret });
+        const token = jwt.sign({ id: user._id }, SECRET);
 
         res.status(200).json({ message: "User authenticated successfully", token });
     } catch (error) {
@@ -117,7 +116,7 @@ router.post("/login", checkToken, async (req, res) => {
 //findAll
 router.get("/", async (req, res) => {
     try {
-        const users = await User.find('-password');
+        const users = await User.find();
 
         res.status(200).json({ users });
     } catch (error) {
@@ -126,7 +125,8 @@ router.get("/", async (req, res) => {
 });
 
 //findOne
-router.get("/:id", async (req, res) => {
+//private route
+router.get("/:id", checkToken, async (req, res) => {
     const id = req.params.id;
 
     try {

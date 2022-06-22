@@ -35,7 +35,7 @@ mongoose
         `mongodb+srv://${DB_USER}:${DB_PASSWORD}@api-rest.h9mcxap.mongodb.net/api-rest?retryWrites=true&w=majority`
     )
     .then(() => {
-        app.listen(3000);
+        app.listen(4000);
         console.log("Conectado ao mongoDB");
     })
     .catch((e) => console.log(e));
