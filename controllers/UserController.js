@@ -1,7 +1,8 @@
-const User = require("../models/User");
+require("dotenv").config();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
+
+const User = require("../models/User");
 const createUserToken = require("../helpers/create-user-token");
 const getToken = require("../helpers/get-token");
 
@@ -67,11 +68,11 @@ module.exports = class userController {
       const { email, password } = req.body;
 
       if(!email) {
-         return res.status(422).json({ message: "Email Required!" });
+         return res.status(422).json({ error: "Email Required!" });
       };
 
       if(!password) {
-         return res.status(422).json({ message: "Password Required!" });
+         return res.status(422).json({ error: "Password Required!" });
       };
 
       //check if user already exists
@@ -91,7 +92,7 @@ module.exports = class userController {
       try {
          await createUserToken(user, req, res)
       } catch (error) {
-         res.status(500).json({ error: error });
+         res.status(500).json({ error });
       };
     }
 
@@ -120,5 +121,66 @@ module.exports = class userController {
       };
 
       res.status(200).json({ user });
+    }
+
+    static async findAll(req, res){
+      try {
+         const users = await User.find().select('-password');
+ 
+         res.status(200).json({ users });
+      } catch (error) {
+         res.status(500).json({ error: error });
+      };
+    }
+
+    static async updateOne(req, res){
+      const id = req.params.id;
+
+      const { name,
+         lastname,
+         email,
+         password } = req.body;
+
+      //create password
+      const salt = await bcrypt.genSalt(12);
+      const passwordHash = await bcrypt.hash(password, salt);
+
+      const user = {
+         name,
+         lastname,
+         email,
+         password: passwordHash,
+      };
+
+      try {
+         const updateUser = await User.updateOne({ _id: id }, user);
+
+         //matchedCount returns 1 if changes were made
+         if (updateUser.matchedCount === 0) {
+               return res.status(422).json({ message: "User Not Found!" });
+         };
+
+         res.status(200).json({ user });
+      } catch (error) {
+         res.status(500).json({ error: error });
+      };
+    }
+
+    static async delete(req, res){
+      const id = req.params.id;
+
+      const user = await User.findOne({ _id: id });
+
+      if (!user) {
+         return res.status(422).json({ message: "User Not Found!" });
+      };
+
+      try {
+         await User.deleteOne({ _id: id });
+         
+         res.status(200).json({ message: "User deleted!" });
+      } catch (error) {
+         res.status(500).json({ error: error });
+      };
     }
 }

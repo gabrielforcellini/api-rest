@@ -11,10 +11,6 @@ const Funko = mongoose.model("Funko",
             type: String,
             required: true
         },
-        email: {
-            type: String,
-            required: true
-        },
         price: {
             type: Number,
             required: true
