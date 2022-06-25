@@ -3,8 +3,11 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("../models/User");
+
+//helpers
 const createUserToken = require("../helpers/create-user-token");
 const getToken = require("../helpers/get-token");
+const getUserByToken = require("../helpers/get-user-by-token");
 
 const SECRET = process.env.SECRET;
 
@@ -136,31 +139,62 @@ module.exports = class userController {
     static async updateOne(req, res){
       const id = req.params.id;
 
+      const token = getToken(req);
+
+      const user = await getUserByToken(token);
+
       const { name,
          lastname,
          email,
-         password } = req.body;
+         password,
+         confirmPassword } = req.body;
+      
+      if(!name){
+         return res.status(422).json({ error: "Name Required!" });
+      }
 
+      user.name = name;
+      
+      if(!lastname){
+         return res.status(422).json({ error: "Lastname Required!" });
+      }
+
+      user.lastname = lastname;
+      
+      if(!email){
+         return res.status(422).json({ error: "E-mail Required!" });
+      }
+
+      const userExists = await User.findOne({ email: email });
+      
+      if(user.email !== email && userExists) {
+         return res.status(422).json({ error: "E-mail already registered! Please try another!" })
+      }
+
+      user.email = email;
+      
+      if(!password){
+         return res.status(422).json({ error: "Password Required!" });
+      }
+      
+      if(!confirmPassword){
+         return res.status(422).json({ error: "Confirm Password Required!" });
+      }
+      
+      if(confirmPassword !== password){
+         return res.status(422).json({ error: "Passwords does not match!" });
+      }
+      
       //create password
       const salt = await bcrypt.genSalt(12);
       const passwordHash = await bcrypt.hash(password, salt);
-
-      const user = {
-         name,
-         lastname,
-         email,
-         password: passwordHash,
-      };
+      
+      user.password = passwordHash;
 
       try {
-         const updateUser = await User.updateOne({ _id: id }, user);
+         await User.findOneAndUpdate({ _id: id }, { $set: user }, { new: true });
 
-         //matchedCount returns 1 if changes were made
-         if (updateUser.matchedCount === 0) {
-               return res.status(422).json({ message: "User Not Found!" });
-         };
-
-         res.status(200).json({ user });
+         res.status(200).json({ message: "User updated!" });
       } catch (error) {
          res.status(500).json({ error: error });
       };
