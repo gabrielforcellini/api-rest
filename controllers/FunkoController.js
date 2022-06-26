@@ -15,19 +15,19 @@ module.exports = class FunkoController {
     
         //validations
         if (!title) {
-            return res.status(422).json({ error: "Title Required!" });
+            return res.status(422).json({ message: "Title Required!" });
         };
         if (!description) {
-            return res.status(422).json({ error: "Description Required!" });
+            return res.status(422).json({ message: "Description Required!" });
         };
         if (!price) {
-            return res.status(422).json({ error: "Price Required!" });
+            return res.status(422).json({ message: "Price Required!" });
         };
         if (!imageUrl) {
-            return res.status(422).json({ error: "Image Url Required!" });
+            return res.status(422).json({ message: "Image Url Required!" });
         };
         if (sale === null) {
-            return res.status(422).json({ error: "Sale Required!" });
+            return res.status(422).json({ message: "Sale Required!" });
         };
 
         //get funko owner
@@ -54,7 +54,7 @@ module.exports = class FunkoController {
     
             res.status(201).json({ message: "Registered Funko!", newFunko });
         } catch (error) {
-            res.status(500).json({ error: error });
+            res.status(500).json({ message: error });
         };
     }
 
