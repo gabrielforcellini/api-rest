@@ -4,7 +4,6 @@ const jwt = require("jsonwebtoken");
 const SECRET = process.env.SECRET;
 
 const createUserToken = async (user, req, res) => {
-
     //create a token
     const token = jwt.sign({
         name: user.name,

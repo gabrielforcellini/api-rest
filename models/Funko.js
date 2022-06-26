@@ -24,7 +24,7 @@ const Funko = mongoose.model("Funko",
             required: true
         },
         user: Object,
-    },{ timestamps: true },)
+    },{ timestamps: true },) //timestamps: true -> add to database a data field of createdAt and updatedAt
 );
 
 module.exports = Funko;

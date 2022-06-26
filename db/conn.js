@@ -9,7 +9,7 @@ async function main() {
         .connect(
             `mongodb+srv://${DB_USER}:${DB_PASSWORD}@api-rest.h9mcxap.mongodb.net/api-rest?retryWrites=true&w=majority`
         )
-        console.log("Conectado ao mongoose");
+        console.log("Conectado ao mongoDB");
 };
 
 main().catch((err) => console.log(err));
