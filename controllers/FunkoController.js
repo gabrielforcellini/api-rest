@@ -64,7 +64,7 @@ module.exports = class FunkoController {
     
             res.status(200).json({ funkos });
         } catch (error) {
-            res.status(500).json({ error: error });
+            res.status(500).json({ message: error });
         };
     }
 
@@ -92,12 +92,12 @@ module.exports = class FunkoController {
 
             //matchedCount returns 1 if changes were made
             if (updateFunko.matchedCount === 0) {
-                return res.status(422).json({ error: "Funko not Found!" });
+                return res.status(422).json({ message: "Funko not Found!" });
             };
 
             res.status(200).json({ funko });
         } catch (error) {
-            res.status(500).json({ error: error });
+            res.status(500).json({ message: error });
         };
     }
 
@@ -108,12 +108,12 @@ module.exports = class FunkoController {
             const funko = await Funko.findOne({ _id: id });
 
             if (!funko) {
-                return res.status(422).json({ error: "Funko not Found!" });
+                return res.status(422).json({ message: "Funko not Found!" });
             };
 
             res.status(200).json({ funko });
         } catch (error) {
-            res.status(500).json({ error: error });
+            res.status(500).json({ message: error });
         };
     }
 
@@ -124,14 +124,14 @@ module.exports = class FunkoController {
         const funko = await Funko.findOne({ _id: id });
 
         if (!funko) {
-            return res.status(422).json({ error: "Funko not Found!" });
+            return res.status(422).json({ message: "Funko not Found!" });
         };
 
         res.status(200).json({ message: "Funko deleted!" });
         try {
             await Funko.deleteOne({ _id: id });
         } catch (error) {
-            res.status(500).json({ error: error });
+            res.status(500).json({ message: error });
         };
     }
 };

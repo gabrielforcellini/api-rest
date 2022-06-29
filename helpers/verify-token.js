@@ -7,13 +7,13 @@ const SECRET = process.env.SECRET;
 //middleware to validate Token
 const checkToken = (req, res, next) => {
     if(!req.headers.authorization) {
-        return res.status(401).json({ error: "Access denied!" });
+        return res.status(401).json({ message: "Access denied!" });
     }
     
     const token = getToken(req);
     
     if(!token){
-        return res.status(401).json({ error: "Access denied!" });
+        return res.status(401).json({ message: "Access denied!" });
     }
 
     try {
@@ -21,7 +21,7 @@ const checkToken = (req, res, next) => {
         req.user = verified;
         next();
     } catch (error) {
-        res.status(400).json({ error: "Invalid Token!" });
+        res.status(400).json({ message: "Invalid Token!" });
     }
 }
 

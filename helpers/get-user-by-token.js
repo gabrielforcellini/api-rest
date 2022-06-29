@@ -8,7 +8,7 @@ const SECRET = process.env.SECRET;
 const getUserByToken = async (token) => {
 
     if(!token) {
-        return res.status(401).json({ error: "Access denied!" });
+        return res.status(401).json({ message: "Access denied!" });
     }
 
     const decoded = jwt.verify(token, SECRET);
