@@ -1,13 +1,10 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-async function main() {
-    const DB_USER = process.env.DB_USER;
-    const DB_PASSWORD = process.env.DB_PASSWORD;
-    
+async function main() {    
     await mongoose
         .connect(
-            `mongodb+srv://${DB_USER}:${DB_PASSWORD}@api-rest.h9mcxap.mongodb.net/api-rest?retryWrites=true&w=majority`
+            `mongodb://localhost:27017/api-rest`
         )
         console.log("Conectado ao mongoDB");
 };

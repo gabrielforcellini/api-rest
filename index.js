@@ -1,6 +1,5 @@
-// config inicial
+// Initial Config
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 
@@ -30,7 +29,7 @@ app.use("/funko", funkoRoutes);
 
 //initial route
 app.get("/", (req, res) => {
-    res.json({ message: "API criada para projeto final em react - Arthur Elias, Gabriel Forcellini e Matheus Schmidt" })
+    res.json({ message: "API created for final project in react - Arthur Elias, Gabriel Forcellini and Matheus Schmidt" })
 });
 
 app.listen(4000);
