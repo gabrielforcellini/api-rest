@@ -5,6 +5,9 @@ const userController = require("../controllers/UserController");
 //middleware
 const verifyToken = require("../helpers/verify-token");
 
+//middleware
+const verifyToken = require("../helpers/verify-token");
+
 //create
 router.post("/register", userController.register);
 
@@ -14,16 +17,42 @@ router.post("/login", userController.login);
 //Verify User
 router.get("/checkuser", userController.checkUser);
 
-//find By Id
-router.get("/findOne/:id", userController.getUserById);
+//read
+//findOne
+router.get("/:id", userController.getUserById);
+
+//update
+
+//patch method to update only necessary data
+router.patch("/edit/:id", verifyToken, userController.editUser);
 
 //findAll
 router.get("/", userController.findAll);
 
-//update By Id
-router.patch("/edit/:id", verifyToken, userController.updateOne);
+res.status(200).json({ users });
+    } catch (error) {
+    res.status(500).json({ error: error });
+};
+});
 
-//delete By Id
-router.delete("/delete/:id", verifyToken, userController.delete);
+//delete
+router.delete("/:id", async (req, res) => {
+    const id = req.params.id;
+
+    const user = await User.findOne({ _id: id });
+
+    if (!user) {
+        return res.status(422).json({ message: "User Not Found!" });
+    };
+
+    res.status(200).json({ message: "User deleted!" });
+    try {
+        await User.deleteOne({ _id: id });
+
+        res.status(200).json({ message: "User Not Found!" });
+    } catch (error) {
+        res.status(500).json({ error: error });
+    };
+});
 
 module.exports = router;
