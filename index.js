@@ -19,8 +19,8 @@ app.use(cors());
 app.use(express.static("public"));
 
 //api routes
-const userRoutes = require("./routes/userRoutes");
-const funkoRoutes = require("./routes/funkoRoutes");
+const userRoutes = require("./public/routes/userRoutes");
+const funkoRoutes = require("./public/routes/funkoRoutes");
 
 //user api routes
 app.use("/user", userRoutes);
