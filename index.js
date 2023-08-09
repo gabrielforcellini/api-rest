@@ -4,6 +4,12 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const app = express();
 
+const corsOptions = {
+    origin: 'https://funko-on-sale.vercel.app/',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+
 //way to read json
 //middleware
 app.use(
@@ -13,7 +19,7 @@ app.use(
 app.use(express.json());
 
 //solve cors
-app.use(cors());
+app.use(cors(corsOptions));
 
 //public folder for images
 app.use(express.static("public"));
