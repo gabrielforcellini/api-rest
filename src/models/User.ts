@@ -1,8 +1,9 @@
-const mongoose = require("../db/conn");
+import mongoose from '../db/conn';
+import { User as IUser} from '../types/User';
 const { Schema } = mongoose;
 
-const User = mongoose.model("User", 
-    new Schema({
+export const User = mongoose.model("User", 
+    new Schema<IUser>({
         name: {
             type: String,
             required: true
@@ -21,5 +22,3 @@ const User = mongoose.model("User",
         },
     },{ timestamps: true },)
 );
-
-module.exports = User;

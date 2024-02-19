@@ -1,8 +1,9 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose';
+import { Funko as IFunko } from '../types/Funko';
 const { Schema } = mongoose;
 
-const Funko = mongoose.model("Funko",
-    new Schema({
+export const Funko = mongoose.model("Funko",
+    new Schema<IFunko>({
         title: {
             type: String,
             required: true
@@ -24,7 +25,5 @@ const Funko = mongoose.model("Funko",
             required: true
         },
         user: Object,
-    },{ timestamps: true },) //timestamps: true -> add to database a data field of createdAt and updatedAt
+    },{ timestamps: true }) //timestamps: true -> add to database a data field of createdAt and updatedAt
 );
-
-module.exports = Funko;

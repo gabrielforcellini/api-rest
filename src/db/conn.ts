@@ -1,5 +1,7 @@
-const mongoose = require("mongoose");
-require("dotenv").config();
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 async function main() {
     const DB_USER = process.env.DB_USER;
@@ -14,4 +16,4 @@ async function main() {
 
 main().catch((err) => console.log(err));
 
-module.exports = mongoose;
+export default mongoose;

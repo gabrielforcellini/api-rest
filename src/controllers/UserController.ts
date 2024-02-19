@@ -1,8 +1,15 @@
-require("dotenv").config();
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+import { Request, Response } from 'express';
+import dotenv from 'dotenv';
+import bcrypt from 'bcrypt';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import { User } from '../models/User';
+import { User as IUser} from '../types/User';
 
-const User = require("../models/User");
+dotenv.config();
+
+if(process.env.SECRET === undefined) {
+   throw new Error("Variável de ambiente SECRET não foi configurada.");
+}
 
 //helpers
 const createUserToken = require("../helpers/create-user-token");
@@ -11,9 +18,9 @@ const getUserByToken = require("../helpers/get-user-by-token");
 
 const SECRET = process.env.SECRET;
 
-module.exports = class userController {
+export class userController {
 
-   static async register(req, res) {
+   static async register(req: Request, res: Response) {
       const { name,
          lastname,
          email,
@@ -61,13 +68,13 @@ module.exports = class userController {
       try {
          const newUser = await user.save();
 
-         await createUserToken(newUser, req, res);
+         return await createUserToken(newUser, req, res);
       } catch (error) {
-         res.status(500).json({ message: error });
+         return res.status(500).json({ message: error });
       };
    }
 
-   static async login(req, res) {
+   static async login(req: Request, res: Response) {
       const { email, password } = req.body;
 
       if (!email) {
@@ -86,27 +93,28 @@ module.exports = class userController {
       };
 
       //check if password match
-      const checkPassword = await bcrypt.compare(password, user.password);
+      const checkPassword = await bcrypt.compare(password, user.password ?? '');
 
       if (!checkPassword) {
          return res.status(422).json({ message: "Invalid password!" });
       };
 
       try {
-         await createUserToken(user, req, res);
+         return await createUserToken(user, req, res);
       } catch (error) {
-         res.status(500).json({ message: error });
+         return res.status(500).json({ message: error });
       };
    }
 
-   static async checkUser(req, res) {
+   static async checkUser(req: Request, res: Response) {
       let currentUser;
 
+      // @ts-ignore TODO: Verificar porque authorization não está na tipagem do req
       if (req.header.authorization) {
          const token = getToken(req);
-         const decoded = jwt.verify(token, SECRET);
+         const decoded = jwt.verify(token, SECRET) as JwtPayload;
 
-         currentUser = await User.findById(decoded.id);
+         currentUser = await User.findById(decoded.id) as IUser;
          currentUser.password = undefined;
       } else {
          currentUser = null;
@@ -115,7 +123,7 @@ module.exports = class userController {
       res.status(200).send(currentUser);
    };
 
-   static async getUserById(req, res) {
+   static async getUserById(req: Request, res: Response) {
       const id = req.params.id;
       const user = await User.findById(id).select('-password');
 
@@ -123,10 +131,10 @@ module.exports = class userController {
          return res.status(422).json({ message: "User Not Found!" });
       };
 
-      res.status(200).json({ user });
+      return res.status(200).json({ user });
    }
 
-   static async findAll(req, res) {
+   static async findAll(res: Response) {
       try {
          const users = await User.find().select('-password');
 
@@ -136,7 +144,7 @@ module.exports = class userController {
       };
    }
 
-   static async updateOne(req, res) {
+   static async updateOne(req: Request, res: Response) {
       const id = req.params.id;
 
       const token = getToken(req);
@@ -194,13 +202,13 @@ module.exports = class userController {
       try {
          await User.findOneAndUpdate({ _id: id }, { $set: user }, { new: true });
 
-         res.status(200).json({ message: "User updated!" });
+         return res.status(200).json({ message: "User updated!" });
       } catch (error) {
-         res.status(500).json({ message: error });
+         return res.status(500).json({ message: error });
       };
    }
 
-   static async delete(req, res) {
+   static async delete(req: Request, res: Response) {
       const id = req.params.id;
 
       const user = await User.findOne({ _id: id });
@@ -212,9 +220,9 @@ module.exports = class userController {
       try {
          await User.deleteOne({ _id: id });
 
-         res.status(200).json({ message: "User deleted!" });
+         return res.status(200).json({ message: "User deleted!" });
       } catch (error) {
-         res.status(500).json({ error: error });
+         return res.status(500).json({ error: error });
       };
    }
 }

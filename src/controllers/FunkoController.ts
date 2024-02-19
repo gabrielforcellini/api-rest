@@ -1,11 +1,12 @@
-const getToken = require("../helpers/get-token");
-const getUserByToken = require("../helpers/get-user-by-token");
-const Funko = require("../models/Funko");
+import { Request, Response } from 'express';
+import { getToken } from '../helpers/get-token';
+import { getUserByToken } from '../helpers/get-user-by-token';
+import { Funko } from '../models/Funko';
 
-module.exports = class FunkoController {
+export class FunkoController {
 
     //create
-    static async create(req, res) {
+    static async create(req: Request, res: Response) {
         const { title,
             description,
             price,
@@ -33,7 +34,7 @@ module.exports = class FunkoController {
         //get funko owner
         const token = getToken(req);
 
-        const user = await getUserByToken(token);
+        const user = await getUserByToken(res, token ?? '');
     
         //create a funko
         const funko = new Funko({
@@ -43,32 +44,32 @@ module.exports = class FunkoController {
             imageUrl,
             sale,
             user: {
-                _id: user._id,
-                name: user.name,
-                lastname: user.lastname
+                _id: user?._id,
+                name: user?.name,
+                lastname: user?.lastname
             }
         });
     
         try {
             const newFunko = await funko.save();
     
-            res.status(201).json({ message: "Registered Funko!", newFunko });
+            return res.status(201).json({ message: "Registered Funko!", newFunko });
         } catch (error) {
-            res.status(500).json({ message: error });
+            return res.status(500).json({ message: error });
         };
     }
 
-    static async findAll(req, res) {
+    static async findAll(res: Response) {
         try {
             const funkos = await Funko.find().sort('-createdAt');
     
-            res.status(200).json({ funkos });
+            return res.status(200).json({ funkos });
         } catch (error) {
-            res.status(500).json({ message: error });
+            return res.status(500).json({ message: error });
         };
     }
 
-    static async update(req, res){
+    static async update(req: Request, res: Response){
         const id = req.params.id;
 
         const {
@@ -95,13 +96,13 @@ module.exports = class FunkoController {
                 return res.status(422).json({ message: "Funko not Found!" });
             };
 
-            res.status(200).json({ funko });
+            return res.status(200).json({ funko });
         } catch (error) {
-            res.status(500).json({ message: error });
+            return res.status(500).json({ message: error });
         };
     }
 
-    static async findOne(req, res){
+    static async findOne(req: Request, res: Response){
         const id = req.params.id;
 
         try {
@@ -111,14 +112,14 @@ module.exports = class FunkoController {
                 return res.status(422).json({ message: "Funko not Found!" });
             };
 
-            res.status(200).json({ funko });
+            return res.status(200).json({ funko });
         } catch (error) {
-            res.status(500).json({ message: error });
+            return res.status(500).json({ message: error });
         };
     }
 
 
-    static async delete(req, res) {
+    static async delete(req: Request, res: Response) {
         const id = req.params.id;
 
         const funko = await Funko.findOne({ _id: id });
@@ -127,11 +128,11 @@ module.exports = class FunkoController {
             return res.status(422).json({ message: "Funko not Found!" });
         };
 
-        res.status(200).json({ message: "Funko deleted!" });
         try {
             await Funko.deleteOne({ _id: id });
+            return res.status(200).json({ message: "Funko deleted!" });
         } catch (error) {
-            res.status(500).json({ message: error });
+            return res.status(500).json({ message: error });
         };
     }
 };

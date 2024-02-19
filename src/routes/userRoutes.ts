@@ -1,6 +1,7 @@
-const router = require("express").Router();
+import { Router } from 'express';
+import { userController } from '../controllers/UserController';
 
-const userController = require("../controllers/UserController");
+const router = Router();
 
 //middleware
 const verifyToken = require("../helpers/verify-token");
@@ -29,4 +30,4 @@ router.get("/", userController.findAll);
 //delete
 router.delete("/:id", verifyToken, userController.delete);
 
-module.exports = router;
+export default router;
